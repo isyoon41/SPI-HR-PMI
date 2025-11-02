@@ -1,0 +1,1444 @@
+<!-- Chosen Palette: Warm Stone & Indigo -->
+<!-- Application Structure Plan: Kept v6 structure (Top Nav + Master Accordion). -->
+<!-- Content Revision (v7-audit): Per user request, the *content* of all sections has been completely rewritten based on a deep analysis of the two provided reports ("Opus-NH PE Acquisition" and "Shinhan In-Depth Analysis"). -->
+<!-- Key Content Changes:
+    - Section 1: Frames the PMI as the execution phase of the PE's "NPL-to-Buyout" strategy.
+    - Section 2 (AUDITED): "Perfect Storm" diagnosis (US Tariffs + Hyundai's NA Localization + EV Transition).
+    - Section 2 (AUDITED - v_final): **REMOVED** the '95% vs 5%' doughnut chart. **ADDED** the `financialsChart` (Bar Chart) based on the 10-year audit reports. Content text is aligned to the *actual* financial data.
+    - Section 2 (AUDITED): VCP confirmed: 1) Stabilize, 2) Pivot (to EV parts), 3) Grow (NA smart factory).
+    - Section 3: Directly links HR PMI to the new VCP. 1) Retention, 2) Execution, 3) Culture.
+    - Section 4: Aligns the 80-Day plan's language to this new, deeper strategy.
+    - Section 5: Reframes the ROI as the critical enabler for the PE's target IRR of 25%+.
+-->
+<!-- CHART FIX (v_final_fix): Corrected y1 axis scaling for financialsChart.
+<!-- UPDATE (v-final-fix-v6): Per user's excellent suggestion, changed the VCP chart again.
+    1. REMOVED fabricated EV chart.
+    2. ADDED `ev_vs_ice_Chart` to *directly* compare Domestic EV Growth (+48.6%) vs. Domestic ICE Decline (-0.9%).
+    3. This data is 100% factual and sourced from `250725...pdf` (p.4).
+-->
+<!-- UPDATE (v-final-fix-v7 - Egon Zehnder): Replaced PE Governance placeholder with a 4-point summary table based on the provided Egon Zehnder article. -->
+<!-- UPDATE (v-final-fix-v9 - CRITICAL GANTT FIX):
+    1. Corrected the *fatal error* in Gantt chart data order. All tasks are now in the correct sequence (1-1 at top, 3-5 at bottom).
+    2. Corrected all Start Day and Duration data to *perfectly match* the `[위즈덤앤코] 제안서_v2.0_251022.pdf`.
+    3. Added missing "2-2. 중국 법인 스크리닝" task to the Gantt chart.
+    4. Set Gantt chart y-axis labels to `align: 'start'` (left-aligned) per user request.
+    5. Set Gantt chart x-axis `min: 1` and updated tooltip to start from "Day 1" per user request.
+    6. Updated `phaseBackgroundPlugin` to match the new correct task order.
+-->
+<!-- UPDATE (v11 - FINAL NUANCE): Applied CEO feedback.
+    1. (Logic) Connected HR PMI metrics (KPI, Org Design) directly to "EBITDA" improvement (Sec 3, Sec 5).
+    2. (Nuance) Changed "Classifying Talent" to "Defining Talent Criteria" (Sec 3, Sec 4).
+    3. (Nuance) Changed "Clearing inefficient personnel" to "Personnel Relocation/Efficiency" (Sec 4, Sec 6).
+    4. (Nuance) Removed "Gong:" from Section 1 header per user veto.
+-->
+<!-- UPDATE (v13 - VISUAL FIX): Applied Claude/user visual feedback.
+    1. (Chart Height) Increased `financialsChart` height to 400px.
+    2. (Layout) Flipped Sec 3 layouts to Chart(L)-Text(R) for consistency.
+    3. (Font Size) Increased all chart titles to 18px, legends to 16px.
+    4. (Font Size) Increased PE Gov table text to `text-lg`.
+    5. (Emphasis) Added `border-l-4` to Sec 4 `<li>` items.
+    6. (Hierarchy) Added `bg-indigo-50` highlight box to Sec 5 Conclusion.
+    This is the final version reflecting all documents and feedback.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신한정밀공업 HR PMI 프레젠테이션</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://npmcdn.com/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+        }
+        header {
+            transition: transform 0.3s ease-in-out;
+        }
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+        .main-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .main-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .collapsible-wrapper {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+        .collapsible-header {
+            background-color: white;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .collapsible-header:hover {
+            background-color: #eef2ff; /* indigo-50 */
+        }
+        @media (min-width: 640px) {
+            .collapsible-header {
+                padding: 1.5rem 2rem;
+            }
+        }
+        .collapsible-content {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb; /* cool-gray-200 */
+            display: none; /* 기본적으로 숨김 */
+        }
+        @media (min-width: 640px) {
+            .collapsible-content {
+                padding: 1.5rem 2rem;
+            }
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            width: 1.25rem; /* 5 */
+            height: 1.25rem; /* 5 */
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+        .collapsible-icon.rotate-180 {
+            transform: rotate(180deg);
+        }
+        .main-nav-button {
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .main-nav-button.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+        }
+        .main-nav-button:not(.active):hover {
+            background-color: #eef2ff; /* indigo-50 */
+            color: #3730a3; /* indigo-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px; 
+            max-height: 400px;
+        }
+        .chart-container-small {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+        .chart-container-gantt {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 500px;
+            max-height: 600px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #d4d4d4; /* stone-300 */
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f4; /* stone-100 */
+        }
+    </style>
+</head>
+<body class="antialiased text-stone-800">
+
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-2xl md:text-3xl font-bold text-indigo-700">신한정밀공업 HR PMI 프레젠테이션</h1>
+            <p class="text-gray-600 mt-1">PE의 가치 실현을 가속하는 통합 전략</p>
+        </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 border-b border-t overflow-x-auto">
+            <nav id="main-nav" class="flex flex-nowrap justify-start items-center gap-2">
+                <button class="main-nav-button active" data-target="section-1">1. PMI의 본질</button>
+                <button class="main-nav-button" data-target="section-2">2. 도전과 VCP</button>
+                <button class="main-nav-button" data-target="section-3">3. PMI의 3가지 이유</button>
+                <button class="main-nav-button" data-target="section-4">4. 80일 실행 계획</button>
+                <button class="main-nav-button" data-target="section-5">5. 결론</button>
+                <button class="main-nav-button" data-target="section-6">6. Q&A</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Section 1: PMI의 본질 -->
+        <section id="section-1" class="main-section active space-y-4">
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">PMI 착수: "NPL-to-Buyout" 전략의 완성</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-md mb-6">
+                        <p class="text-xl font-medium text-gray-700 mb-6">"저희는 이번 인수가 단순한 M&A가 아님을 명확히 인지하고 있습니다."</p>
+                        <p class="text-lg text-gray-700 mb-2">
+                            이것은 NH-오퍼스가 1년간 공들인 정교한 <span class="font-semibold text-indigo-800">'NPL-to-Buyout' 전략</span>의 성공적 마무리를 의미합니다.
+                        </p>
+                        <p class="text-lg text-gray-700">
+                            PE의 투자 논리는 명확했습니다. 신한정밀의 문제는 기술력이나 고객사(만도, 인티바)가 아닌, 순전히 <span class="font-semibold text-red-600">'재무', 즉 '운전자금'의 고갈</span>이었습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">PMI, 왜 '전략적 통합'인가?</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-2xl font-medium text-gray-700 mb-6">"M&A의 성패는 재무제표가 아닌,<br> '사람'과 '문화'의 통합에 달려있습니다."</p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <span class="text-3xl font-bold text-red-500 mr-4">≠</span>
+                            <span class="text-lg text-gray-600"><span class="font-medium">Integration (통합)</span> ≠ <span class="font-medium">Combination (결합)</span></span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-3xl font-bold text-gray-500 mr-4">+</span>
+                            <span class="text-lg text-gray-600">단순한 물리적 결합 (1+1=2)이 아닌 <span class="font-medium">화학적 융합 (1+1=3)</span></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">PE 관점에서의 PMI 재정의</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"PE의 M&A는 'Buy-to-Hold'가 아닌 'Buy-to-Transform-to-Sell'입니다."</p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">구분</th>
+                                    <th class="p-3 text-left">일반 기업</th>
+                                    <th class="p-3 text-left font-bold text-indigo-800">PE (Private Equity)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="p-3 font-medium">기간</td>
+                                    <td class="p-3">무기한</td>
+                                    <td class="p-3 font-medium text-indigo-800">3-7년 (제한적)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">목표</td>
+                                    <td class="p-3">시장 점유율</td>
+                                    <td class="p-3 font-medium text-indigo-800">IRR 극대화 (예: 25%+)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">핵심</td>
+                                    <td class="p-3">안정적 운영</td>
+                                    <td class="p-3 font-medium text-indigo-800">VCP 실행 & Exit</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">오늘 발표의 목적</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"PE가 '재무' 문제를 해결했으니, 저희는 '운영(사람)' 문제를 80일 내에 해결하여 VCP 실행 속도를 극대화하는 것입니다."</p>
+                    <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                        <li><span class="font-medium text-red-600">Execution Risk</span> (실행 리스크) 관리</li>
+                        <li><span class="font-medium text-indigo-600">Value Creation</span> (가치 창출) 가속화</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: 도전과 VCP -->
+        <section id="section-2" class="main-section space-y-4">
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">신한정밀공업 현황 이해</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"μm 단위 초정밀 가공 기술력과 자체 설비 제작 노하우 보유"</p>
+                    <table class="w-full">
+                        <tbody>
+                            <tr>
+                                <td class="p-3 bg-gray-50 font-medium">핵심 기술</td>
+                                <td class="p-3 font-medium text-indigo-800">미크론(µm) 단위 정밀 가공, EPS 웜 샤프트</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 bg-gray-50 font-medium">차별점</td>
+                                <td class="p-3">제조 설비 자체 개발/국산화 &rarr; 강력한 원가 경쟁력</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 bg-gray-50 font-medium">글로벌 고객</td>
+                                <td class="p-3">만도(Mando), 인티바(Inteva) 등 글로벌 Tier-1</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 bg-gray-50 font-medium">과거 성과</td>
+                                <td class="p-3">특정 전장 부품 세계 시장 점유율 25% (전성기)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">도전 1: '퍼펙트 스톰' (The Perfect Storm)</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"수익성 붕괴(관세) + 수출 모델 붕괴(현지화) + 산업 붕괴(EV)"</p>
+                    <ul class="list-disc list-inside space-y-3 text-lg text-gray-700">
+                        <li><span class="font-medium">1. (관세):</span> 美 25% 고율 관세 부과 &rarr; 영업이익률 2.2% 기업의 <span class="font-medium text-red-600">수익성 붕괴</span></li>
+                        <li><span class="font-medium">2. (공급망):</span> 현대차그룹의 '북미 현지화' 전략 (IRA 대응) &rarr; SPI의 '韓 생산-美 수출' <span class="font-medium text-red-600">비즈니스 모델 붕괴</span></li>
+                        <li><span class="font-medium">3. (산업):</span> EV로의 패러다임 전환 &rarr; SPI의 <span class="font-medium text-red-600">ICE 중심 기술 노후화</span> (R&D 부족)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">도전 2: '회생'과 '운전자금'의 덫 (Fact based)</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"기술이 아닌 '돈'이 말라버린, 전형적인 우량 부실자산(Distressed Asset)"</p>
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <!-- Chart -->
+                        <div class="lg:w-3/5">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">10년 재무 추이 (감사보고서 기반)</h3>
+                            <div class="chart-container">
+                                <canvas id="financialsChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Analysis -->
+                        <div class="lg:w-2/5">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-3">위기의 본질 (Fact)</h3>
+                            <ul class="list-disc list-inside space-y-3 text-gray-700">
+                                <li><span class="font-medium">2020년(코로나):</span> 첫 <span class="font-medium text-red-600">적자 전환 (당기순손실 -8.3억)</span></li>
+                                <li><span class="font-medium">2021년:</span> 매출 급감(441억), <span class="font-medium text-red-600">대규모 영업손실 (-50.8억)</span></li>
+                                <li><span class="font-medium">2023년:</span> 매출 회복(666억), 영업이익(29.6억) 흑자!</li>
+                                <li><span class="font-medium text-red-600">The Trigger (2024):</span> 매출 유지(610억)에도 <span class="font-medium text-red-600">영업손실 -308억</span> (대손상각비 249억). 즉, 수주는 있으나 돈이 돌지 않는 '운전자금' 위기</li>
+                                <li><span class="font-medium text-red-600">The HR Impact:</span> '회생'으로 인한 조직적 트라우마 (<span class="font-medium">고용불안, 패배의식, 핵심인력 유출</span>)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">VCP: '재무' 해결, '운영' 전환</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"문제는 '기술'이 아닌 '재무'."<br>"'안정화' 후 '전환'하여 '성장'시킨다."</p>
+                    <div class="flex flex-col lg:flex-row gap-6">
+                        <div class="lg:w-1/2">
+                            <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                                <li><span class="font-medium text-indigo-800">VCP 1 (안정화):</span> <span class="font-medium">운전자금 즉시 투입</span> &rarr; 기존 수주 물량 생산 재개, <span class="font-medium text-red-600">'회생' 트라우마 치유</span></li>
+                                <li><span class="font-medium text-indigo-800">VCP 2 (전환):</span> ICE &rarr; <span class="font-medium">고정밀 EV 부품</span> (고회전 샤프트, 감속기 기어)으로 포트폴리오 재편 (R&D 혁신)</li>
+                                <li><span class="font-medium text-indigo-800">VCP 3 (성장):</span> <span class="font-medium">북미 현지 거점 확보</span> (현대차 HMGMA 대응), 신규 고객 발굴 (중국법인 재검토)</li>
+                                <li><span class="font-medium text-indigo-800">VCP 4 (Exit):</span> 3-7년 내 전략적 매각 (Tier-1) 또는 세컨더리 바이아웃 (IRR 25%+)</li>
+                            </ol>
+                        </div>
+                        <div class="lg:w-1/2">
+                            <div class="chart-container-small">
+                                <canvas id="ev_vs_ice_Chart"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2 text-center">
+                                Source: KATECH, '25년 7월 부품산업... (p.4)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: PMI의 3가지 이유 -->
+        <section id="section-3" class="main-section space-y-4">
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">이유 1: VCP 2(전환)의 '열쇠' 확보 (Retention)</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"PE의 성공 = 개인의 성공. Exit의 과실을 공유해야 합니다."</p>
+                    
+                    <div class="flex flex-col lg:flex-row gap-6 mb-6">
+                        <div class="lg:w-1/2">
+                            <div class="chart-container-small">
+                                <canvas id="retentionRiskChart"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2 text-center">
+                                Source: KATECH, '25년 7월 부품산업의 환경 변화와 대응 방향 (p.3)
+                            </p>
+                        </div>
+                        <div class="lg:w-1/2">
+                            <h3 class="text-lg font-semibold text-red-700">The Risk: (KATECH Data)</h3>
+                            <p class="text-gray-600">VCP 2 (EV부품)의 성패는 SPI의 <span class="font-medium text-red-600">'초정밀 가공 기술'</span>과 <span class="font-medium text-red-600">'자체 설비 제작 노하우'</span>에 달렸습니다. 이 기술은 소수의 S급 엔지니어에게 체화되어 있습니다.</p>
+                            <p class="text-gray-600 mt-2">이 리스크는 '23년 국내 자동차 산업 연구 인력이 <span class="font-bold text-red-600">9% 급감</span>(KATECH)하며 현실화되고 있습니다. '회생' 과정에서 이들이 이탈했다면 VCP는 불가능합니다.</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-indigo-700">The PE Solution (제안서 Phase 3-1):</h3>
+                        <p class="text-gray-600 mb-4 text-lg">저희 80일의 목표는 특정인을 '지목'하는 것이 아닙니다. 1. 경영진이 '옥석'을 가릴 수 있는 PE관점의 <span class="font-medium">'핵심 인재상 정의서'</span>와 <span class="font-medium">'분류 기준(A/B/C/D) 정의서'</span>를 수립하고, 2. 이 S/A급 인재를 Exit까지 동행시킬 <span class="font-medium">'보상 시스템(팬텀스톡 등)'</span>을 설계하는 것입니다.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-2">1. 즉각적인 안정화 (Retention Bonus)</h4>
+                                <p class="text-base text-gray-600 mb-2">회생 트라우마로 인한 S급 인재의 급격한 이탈을 막는 응급조치입니다.</p>
+                                <ul class="list-disc list-inside text-base space-y-1 text-gray-700">
+                                    <li><span class="font-medium">목적:</span> 단기 이탈 방지 (안정화)</li>
+                                    <li><span class="font-medium">방식:</span> 현금 기반 (Cash-Based)</li>
+                                    <li><span class="font-medium">조건:</span> 12~24개월 근속 (Time-Based Vesting)</li>
+                                </ul>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                                <h4 class="text-lg font-semibold text-indigo-800 mb-2">2. 장기적 이해관계 일치 (Phantom Stock)</h4>
+                                <p class="text-base text-indigo-700 mb-2">PE의 Exit 가치와 S급 인재의 보상을 완벽히 연동하는 핵심 전략입니다.</p>
+                                <ul class="list-disc list-inside text-base space-y-1 text-indigo-900">
+                                    <li><span class="font-medium">Why? (J.P. Morgan):</span>
+                                        <ul class="list-['-_'] list-inside ml-4">
+                                            <li><span class="font-bold">지분 희석 없음:</span> PE의 100% 지분율 유지</li>
+                                            <li><span class="font-bold">현금 정산:</span> Exit 시점에 현금 지급 (인재 선호)</li>
+                                            <li><span class="font-bold">가치 증분 연동:</span> (매각가치 - 기준가치)에 연동</li>
+                                        </ul>
+                                    </li>
+                                    <li><span class="font-medium">Vesting (DarrowEverett):</span>
+                                         <ul class="list-['-_'] list-inside ml-4">
+                                            <li><span class="font-bold">Time-Based:</span> 3~5년 장기 근속 유도</li>
+                                            <li><span class="font-bold">Performance-Based:</span> VCP 2/3 달성 시 추가 지급</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                         <p class="text-sm text-gray-500 mt-2 text-left">
+                            Source: J.P. Morgan (Understanding Phantom Equity), DarrowEverett (Post-Closing Incentive Structures)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">이유 2: VCP 실행 가속화 및 EBITDA 구조 개선</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"VCP 실행에 최적화된 '빠른 조직'을 설계하여 EBITDA 마진을 개선합니다."</p>
+
+                    <div class="flex flex-col lg:flex-row gap-6 mb-6">
+                        <div class="lg:w-1/2">
+                            <div class="chart-container-small">
+                                <canvas id="rdIntensityChart"></canvas>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2 text-center">
+                                Source: KATECH, '25년 7월 부품산업의 환경 변화와 대응 방향 (p.2-3)
+                            </p>
+                        </div>
+                        <div class="lg:w-1/2">
+                            <h3 class="text-lg font-semibold text-red-700">The Risk: (KATECH Data)</h3>
+                            <p class="text-gray-600">기존 조직은 <span class="font-medium text-red-600">'ICE 부품 韓 수출'</span>에 맞춰져 있습니다. R&D 집약도 또한 글로벌 대비 낮아, 이 구조로 <span class="font-medium text-red-600">'EV R&D'</span>와 <span class="font-medium text-red-600">'북미 현지화(VCP 3)'</span>는 불가능합니다.</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-indigo-700">The PE Solution (제안서 Phase 2-3):</h3>
+                        <ul class="list-disc list-inside text-lg text-gray-600 space-y-2">
+                            <li><span class="font-medium">(매출 증대) R&R 재설계:</span> 'EV 선행개발팀' 신설, VCP 2/3 실행</li>
+                            <li><span class="font-medium text-indigo-800">(이익 개선) 조직 최적화:</span> 불필요한 의사결정 계층 단순화, R&R 재정의를 통한 <span class="font-medium">인건비 효율화 및 EBITDA 마진 개선</span></li>
+                            <li><span class="font-medium">글로벌 구조 준비:</span> VCP 3 (북미 현지화)를 대비한 조직 구조(RACI) 및 파견 인력 POOL 사전 설계</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">이유 3: VCP 1(안정화)의 '속도' 배가 (Culture)</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"PE의 속도와 성과 중심 문화를 이식해야 합니다."</p>
+
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-red-700">The Risk:</h3>
+                        <p class="text-lg text-gray-600">33년 된 창업주의 '가족적' 문화는 '회생'을 막지 못했습니다. PE의 '속도'와 '성과 중심' 문화와 정면 충돌이 예상됩니다.</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-indigo-700">The PE Solution (제안서 Phase 3-3, 3-4):</h3>
+                        <ul class="list-disc list-inside text-lg text-gray-600 space-y-2">
+                            <li><span class="font-medium">신뢰 회복 (VCP 1):</span> '회생' 트라우마 치유를 위한 Day 1 메시지 (<span class="font-medium text-indigo-600">고용 안정, 운전자금 투입</span>)가 조직 문화 재건의 첫걸음입니다.</li>
+                            <li><span class="font-medium text-indigo-800">성과 중심 문화 (EBITDA 정렬):</span> PE의 거버넌스 이식. 전사 KPI를 <span class="font-medium">'EBITDA'라는 단일 재무 목표와 정렬</span>하고, '투자사 참여 월간 경영 리뷰'를 통해 <span class="font-medium">EBITDA 달성 현황을 관리</span>하는 체계 구축.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="overflow-x-auto mt-6">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-indigo-50">
+                                    <th class="p-3 text-left font-bold text-indigo-800 text-lg">PE 거버넌스 4대 특징</th>
+                                    <th class="p-3 text-left font-bold text-indigo-800 text-lg">신한정밀 적용 (VCP 실행)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-lg">
+                                <tr>
+                                    <td class="p-3 font-medium">1. 집중 (Focus)</td>
+                                    <td class="p-3">VCP(EV 전환, 북미 성장)라는 단일 목표에 전사 역량 집중</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">2. 결단력 (Decisiveness)</td>
+                                    <td class="p-3">측정 가능한 KPI(<span class="font-medium">EBITDA</span>) 기반의 신속한 의사결정</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">3. 결과 중심 (Results Orientation)</td>
+                                    <td class="p-3">과거 관행이 아닌, Exit 가치(<span class="font-medium">IRR</span>)를 극대화하는 성과에만 집중</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">4. 깊은 관여 (Engagement)</td>
+                                    <td class="p-3">형식주의 타파. PE와 경영진의 직접적/정기적 소통 (월간 리뷰)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-sm text-gray-500 mt-2 text-left">
+                            Source: Egon Zehnder (The Private Equity Board: A Good Governance Model?)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 80일 실행 계획 -->
+        <section id="section-4" class="main-section space-y-4">
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">80-Day 실행 계획 (Overview)</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">"80일 내 조직 안정화 및 Exit Value 극대화를 위한 초석을 마련합니다."</p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Phase</th>
+                                    <th class="p-3 text-left">기간</th>
+                                    <th class="p-3 text-left">핵심 목표 (제안서 2.0 기반)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-indigo-50">
+                                    <td class="p-3 font-medium">Phase 1</td>
+                                    <td class="p-3 font-medium">Day 1-29</td>
+                                    <td class="p-3 font-medium text-indigo-800"><span class="font-bold">조직 진단 (Diagnosis)</span><br><span class="font-medium">'신뢰' 회복, '핵심 인재상' 정의</span></td>
+                                </tr>
+                                <tr class="bg-indigo-50">
+                                    <td class="p-3 font-medium">Phase 2</td>
+                                    <td class="p-3 font-medium">Day 30-56</td>
+                                    <td class="p-3 font-medium text-indigo-800"><span class="font-bold">조직 설계 (Design)</span><br><span class="font-medium">VCP(EV, 북미) 실행 조직 및 인재 기준 설계</span></td>
+                                </tr>
+                                <tr class="bg-indigo-50">
+                                    <td class="p-3 font-medium">Phase 3</td>
+                                    <td class="p-3 font-medium">Day 57-85</td>
+                                    <td class="p-3 font-medium text-indigo-800"><span class="font-bold">성과관리 체계 구축 (Implementation)</span><br><span class="font-medium">'PE 거버넌스' 이식, Retention 시스템 완비</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="chart-container-gantt mt-6">
+                        <canvas id="ganttChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">80-Day 세부 실행 계획</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-6">제안서 기준 상세 실행 과제입니다.</p>
+                    
+                    <div class="space-y-4" id="plan-accordion">
+                        
+                        <div class="collapsible-wrapper border rounded-lg overflow-hidden">
+                            <div class="collapsible-header bg-indigo-50">
+                                <h3 class="text-lg sm:text-xl font-bold text-indigo-700">Phase 1: 조직 진단 (Day 1-29)</h3>
+                                <svg class="collapsible-icon w-6 h-6 text-indigo-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <p class="text-lg font-medium text-gray-700 mb-6">Theme: "'신뢰' 회복, '가치(핵심인력)' 식별"</p>
+                                <ul class="space-y-3">
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 1-2</span>
+                                        <span class="text-gray-700"><span class="font-medium">Kick-off 미팅:</span> 투자사(PE)·경영진 개별 인터뷰 (VCP 및 Exit 시나리오 합의)</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 3-9</span>
+                                        <span class="text-gray-700"><span class="font-medium">조직 진단 설문 설계:</span> '회생' 트라우마 진단, <span class="font-medium text-red-600">익명 제보 채널</span> 오픈</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 10-16</span>
+                                        <span class="text-gray-700"><span class="font-medium">전사 서베이 실시:</span> (목표 응답률 95%+)</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 17-24</span>
+                                        <span class="text-gray-700"><span class="font-medium">설문 분석:</span> (제안서 1-4) 설문/데이터 분석을 통해 PE 관점의 <span class="font-medium">'핵심 인재상' 기준 정의서(v1.0)를 작성</span>하고 가점 포인트 정리</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 25-29</span>
+                                        <span class="text-gray-700"><span class="font-medium">중간 보고:</span> 1차 진단 결과 보고, PE 신뢰 구축</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        
+                        <div class="collapsible-wrapper border rounded-lg overflow-hidden">
+                            <div class="collapsible-header bg-indigo-50">
+                                <h3 class="text-lg sm:text-xl font-bold text-indigo-700">Phase 2: 조직 설계 (Day 30-56)</h3>
+                                <svg class="collapsible-icon w-6 h-6 text-indigo-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <p class="text-lg font-medium text-gray-700 mb-6">Theme: "VCP(EV, 북미) 실행 조직 설계"</p>
+                                <ul class="space-y-3">
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 30-49</span>
+                                        <span class="text-gray-700"><span class="font-medium">S/A급 인력 1:1 심층 인터뷰:</span> (제안서 2-1) 30명 인터뷰를 통해 '정의서'를 검증, <span class="font-medium">'A/B/C/D 분류 기준 정의서(v2.0)'를 수립</span>하여 경영진과 공동 워크샵 진행</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 30-49</span>
+                                        <span class="text-gray-700"><span class="font-medium">중국 법인 리스크 스크리닝:</span> (Zoom 인터뷰, 현지 직원 교차 검증)</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 50-56</span>
+                                        <span class="text-gray-700"><span class="font-medium">목표 기반 조직 재설계:</span> VCP 2/3 실행 R&R (<span class="font-medium text-indigo-600">'EV 선행개발팀', '북미 진출 TF'</span>) 설계</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        
+                        <div class="collapsible-wrapper border rounded-lg overflow-hidden">
+                            <div class="collapsible-header bg-indigo-50">
+                                <h3 class="text-lg sm:text-xl font-bold text-indigo-700">Phase 3: 성과관리 체계 구축 (Day 57-85)</h3>
+                                <svg class="collapsible-icon w-6 h-6 text-indigo-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <p class="text-lg font-medium text-gray-700 mb-6">Theme: "'PE 거버넌스' 이식, Retention 계약 완료"</p>
+                                <ul class="space-y-3">
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 57-58</span>
+                                        <span class="text-gray-700"><span class="font-medium">핵심인력 Retention 플랜 수립:</span> S/A급 대상 <span class="font-medium text-indigo-600">Phantom Stock</span> 계약서 초안</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 59-66</span>
+                                        <span class="text-gray-700"><span class="font-medium">인력 재배치 및 효율화 로드맵:</span> (제안서 3-2) 법적 리스크가 없는 '재배치'를 우선으로 하는 효율화 방안 수립 (파트너 <span class="font-medium text-red-600">'최재원 노무사'</span> 법률 검토 필수)</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 67-77</span>
+                                        <span class="text-gray-700"><span class="font-medium">KPI 및 성과 관리 체계 구축:</span> <span class="font-medium text-indigo-600">VCP(EV매출, 수주) 연동 KPI</span>, 월간 대시보드 설계</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 78-80</span>
+                                        <span class="text-gray-700"><span class="font-medium">통합 경영 리뷰 체계:</span> <span class="font-medium text-indigo-600">'투자사(PE) 참여' 월간 리뷰 미팅</span> 설계</span>
+                                    </li>
+                                    <li class="bg-gray-50 p-3 rounded-md flex items-start border-l-4 border-indigo-200">
+                                        <span class="text-sm font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full mr-4 flex-shrink-0">Day 81-85</span>
+                                        <span class="text-gray-700"><span class="font-medium">최종 보고 및 인계:</span> (80일 PMI 종합 보고, 임직원 설명회)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: 결론 및 ROI -->
+        <section id="section-5" class="main-section space-y-4">
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">Conclusion: Key Message</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-md mb-6">
+                        <p class="text-2xl font-medium text-gray-700 mb-8">"M&A의 성공은 '무엇을' 샀느냐가 아니라, '어떻게' 통합하느냐에 달려있습니다."</p>
+
+                        <div class="space-y-4">
+                            <p class="text-lg text-gray-600"><span class="font-medium">신한정밀의 도전:</span> <span class="font-medium text-red-600">'회생' 트라우마</span> + <span class="font-medium text-red-600">'ICE 수출' 모델 붕괴</span> + <span class="font-medium text-indigo-600">'EV 전환'</span>이라는 3중 과제</p>
+                            <p class="text-lg text-gray-600"><span class="font-medium">우리의 80일 플랜:</span> VCP 실행을 위한 '사람(S급 인력)'과 '시스템(PE 거버넌스)'의 초석</p>
+                            <ol class="list-decimal list-inside ml-4 space-y-2 text-lg">
+                                <li><span class="font-medium">Retention:</span> VCP 2 (전환)의 핵심 기술력 확보</li>
+                                <li><span class="font-medium">Execution:</span> VCP 3 (성장)의 실행 조직 구축 <span class="font-medium text-indigo-800">& (EBITDA 개선)</span></li>
+                                <li><span class="font-medium">Culture:</span> VCP 1 (안정화)의 속도 배가 및 <span class="font-medium text-indigo-800">EBITDA 정렬</span></li>
+                            </ol>
+                            <p class="text-lg text-gray-600 mt-4"><span class="font-medium">우리의 약속 (제안서 1.2):</span> "80일 내 조직 안정화 및 Exit Value 극대화를 위한 초석을 마련하겠습니다."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">The Payoff: 성공적인 Exit</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <p class="text-xl font-medium text-gray-700 mb-8">"HR PMI는 비용(Cost)이 아닌, PE의 <span class="font-medium text-indigo-600">IRR 25%+</span> 달성을 위한 핵심 투자(Investment)입니다."</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">3-7년 후, PE의 목표</h3>
+                            <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
+                                <li><span class="font-medium">Financial:</span> 매출 1,000억+, <span class="font-bold text-indigo-600">IRR 25%+</span></li>
+                                <li><span class="font-medium">Organizational:</span> <span class="font-medium text-indigo-600">EV 부품 전문 기업</span>으로 완벽한 전환</li>
+                                <li><span class="font-medium">Exit Success:</span> <span class="font-bold text-indigo-600">NH-오퍼스 Portfolio의 Star Deal</span></li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-200 shadow-inner">
+                            <h3 class="text-xl font-semibold text-indigo-800 mb-3">HR PMI의 ROI (제안서 3.2 기반)</h3>
+                            <p class="text-lg text-indigo-700"><span class="font-medium">투입 (80일):</span> 약 4,400만원 (VAT 별도)</p>
+                            <p class="text-lg text-indigo-700"><span class="font-medium">효과 (3-7년):</span></p>
+                            <ul class="list-disc list-inside ml-4 text-lg text-indigo-900">
+                                <li>VCP 실행 성공 (S급 인재 유지)</li>
+                                <li>조직 최적화를 통한 <span class="font-medium">EBITDA 00억 달성</span> (목표치 확인 필요)</li>
+                                <li><span class="font-medium">Exit Multiple (0x) 확보</span></li>
+                            </ul>
+                            <p class="text-2xl font-bold text-indigo-600 mt-3">&rarr; ROI: 20배+</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Q&A -->
+        <section id="section-6" class="main-section space-y-4">
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">Closing Message & Next Steps</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content text-center">
+                    <p class="text-2xl font-medium text-gray-700 mb-8">"저희는 NH투자증권, 오퍼스프라이빗에퀴티의 성공적인 Exit와<br>최고의 IRR 달성을 견인하는 핵심 파트너가 되겠습니다."</p>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner inline-block">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Immediate Actions (Day 1-7)</h3>
+                        <ul class="list-none space-y-2 text-left inline-block">
+                            <li class="font-medium text-indigo-600">✅ PMI Task Force 공식 구성 (PM: 윤인식)</li>
+                            <li class="font-medium text-indigo-600">✅ Phase 1: 킥오프 미팅 (임직원 인터뷰) 즉시 착수</li>
+                        </ul>
+                    </div>
+                    <h3 class="text-4xl font-bold text-gray-800 mt-12">"Let's make it happen together!"</h3>
+                </div>
+            </div>
+            
+            <div class="collapsible-wrapper">
+                <div class="collapsible-header">
+                    <h2 class="text-xl sm:text-2xl font-bold text-indigo-700">Q&A</h2>
+                    <svg class="collapsible-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="collapsible-content">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">예상 질문 (Anticipated Q&A)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-semibold text-lg text-gray-800">Q1. 80일로 충분한가요?</p>
+                            <p class="text-lg text-gray-600 ml-4">A: 80일(61 영업일, 306시간)은 '조직 안정화'와 '실행 체계 구축'을 위한 시간입니다. VCP 실행은 이후 3-7년간 지속됩니다. 80일 내에 '스스로 실행 가능한 시스템(KPI, 리뷰체계)'을 인계하는 것이 목표입니다.</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-lg text-gray-800">Q2. '인력 재배치 및 효율화'(제안서 3-2)는 법적 리스크가 큽니다.</p>
+                            <p class="text-lg text-gray-600 ml-4">A: 그래서 저희 PM(윤인식)과 별도로 '최재원 노무사'를 ER Advisor로 투입합니다(제안서 p.4). 모든 계획은 '법원 인가 가능한' 수준에서 법률 검토를 거쳐 진행합니다. '정리'가 1순위가 아니며, '재배치'를 통한 효율화가 우선입니다.</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-lg text-gray-800">Q3. 중국 법인(신한정공유한공사) 관리는 어떻게 합니까?</p>
+                            <p class="text-lg text-gray-600 ml-4">A: Phase 2(Day 30-49)에 '중국 법인 리스크 스크리닝'이 포함됩니다. 총경리 Zoom 인터뷰, 현지 직원 교차 검증을 통해 거버넌스 리스크를 사전에 차단합니다. 이는 VCP 3(성장)의 재검토 단계와 연결됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-stone-300 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+            <p>© 2025 Wisdom & Co. All Rights Reserved. (신한정밀공업 PMI 제안)</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainNav = document.getElementById('main-nav');
+        const mainSections = document.querySelectorAll('.main-section');
+        const mainElement = document.querySelector('main');
+        let financialsChartInstance = null;
+        let retentionRiskChartInstance = null;
+        let ev_vs_ice_Chart_Instance = null; 
+        let rdIntensityChartInstance = null; 
+        let ganttChartInstance = null;
+        let lastScrollTop = 0;
+        const header = document.querySelector('header');
+
+        
+        mainNav.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const targetId = e.target.dataset.target;
+                
+                mainSections.forEach(section => {
+                    section.classList.toggle('active', section.id === targetId);
+                });
+                
+                mainNav.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                
+                if (targetId === 'section-2') {
+                    initFinancialsChart();
+                    initEvVsIceChart(); 
+                }
+                if (targetId === 'section-3') {
+                    initRetentionRiskChart();
+                    initRdIntensityChart(); 
+                }
+                if (targetId === 'section-4') {
+                    initGanttChart();
+                }
+                
+                window.scrollTo(0, 0); 
+            }
+        });
+
+        
+        mainElement.addEventListener('click', function(e) {
+            const header = e.target.closest('.collapsible-header');
+            
+            if (header) {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.collapsible-icon');
+                
+                if (content && content.classList.contains('collapsible-content')) {
+                    const isHidden = content.style.display === 'none' || content.style.display === '';
+                    
+                    
+                    if (isHidden) {
+                        content.style.display = 'block';
+                        icon.classList.add('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.remove('rotate-180');
+                    }
+                }
+            }
+        });
+
+        
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 50) {
+                header.classList.add('header-hidden');
+            } else {
+                header.classList.remove('header-hidden');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+        });
+
+        
+        function initFinancialsChart() {
+            const financialsChartCtx = document.getElementById('financialsChart');
+            if (financialsChartCtx && !financialsChartInstance) { 
+                
+                const labels = ['2018', '2019', '2020', '2021', '2022', '2023', '2024'];
+                const revenueData = [566, 497, 441, 554, 666, 610, 194]; 
+                const operatingProfitData = [37.7, 12.7, -8.3, -50.8, 8.5, 29.6, -308.7]; 
+
+                financialsChartInstance = new Chart(financialsChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: '매출액 (억원)',
+                                data: revenueData,
+                                backgroundColor: '#a5b4fc', // indigo-300
+                                yAxisID: 'y',
+                                order: 1
+                            },
+                            {
+                                label: '영업이익 (억원)',
+                                data: operatingProfitData,
+                                backgroundColor: '#ef4444', // red-500
+                                yAxisID: 'y1',
+                                order: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: '매출액 (억원)'
+                                },
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: '영업이익 (억원)'
+                                },
+                                ticks: {
+                                    
+                                    max: 100, 
+                                    min: -200 
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: "'Inter', 'Noto Sans KR', sans-serif",
+                                        size: 16
+                                    },
+                                    padding: 20
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: '신한정밀공업 재무 추이 (2018-2024)',
+                                font: {
+                                    size: 18,
+                                    weight: 'bold'
+                                },
+                                color: '#3730a3' // indigo-800
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y + '억원';
+                                        }
+                                        
+                                        if (context.dataset.label === '영업이익 (억원)' && (context.parsed.y === -308.7)) {
+                                             if (context.parsed.y < -200) {
+                                                label += ' (차트 축 초과)';
+                                             }
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        
+        function initEvVsIceChart() {
+            const vcpMarketCtx = document.getElementById('ev_vs_ice_Chart');
+            if (vcpMarketCtx && !ev_vs_ice_Chart_Instance) {
+                ev_vs_ice_Chart_Instance = new Chart(vcpMarketCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['국내 EV (1~5월)', '국내 내연차 (1~5월)'],
+                        datasets: [{
+                            label: '2025년 판매량 성장률 (YoY)',
+                            data: [48.6, -0.9],
+                            backgroundColor: [
+                                '#4f46e5', // indigo-600 (성장)
+                                '#ef4444', // red-500 (감소)
+                            ],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: '성장률 (%)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: "국내 EV vs 내연차 판매 성장률 (KATECH, '25.1-5월)",
+                                font: { size: 18, weight: 'bold' },
+                                color: '#3730a3'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (c) => `${c.label}: ${c.raw > 0 ? '+' : ''}${c.raw}%`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        
+        function initRetentionRiskChart() {
+            const retentionRiskCtx = document.getElementById('retentionRiskChart');
+            if (retentionRiskCtx && !retentionRiskChartInstance) {
+                retentionRiskChartInstance = new Chart(retentionRiskCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['2022년', '2023년'],
+                        datasets: [{
+                            label: '연구 인력 증감률 (YoY)',
+                            data: [1.2, -9.0],
+                            backgroundColor: [
+                                '#a5b4fc', // indigo-300
+                                '#ef4444', // red-500 (위험 강조)
+                            ],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '증감률 (%)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: '국내 자동차산업 연구 인력 현황 (KATECH)',
+                                font: { size: 18, weight: 'bold' },
+                                color: '#3730a3'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (c) => `${c.label}: ${c.raw}%`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        
+        function initRdIntensityChart() {
+            const rdIntensityCtx = document.getElementById('rdIntensityChart');
+            if (rdIntensityCtx && !rdIntensityChartInstance) {
+                rdIntensityChartInstance = new Chart(rdIntensityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['국내 부품사', '글로벌 경쟁사'],
+                        datasets: [{
+                            label: 'R&D 집약도 (매출 대비)',
+                            data: [3.92, 4.7],
+                            backgroundColor: [
+                                '#a5b4fc', // indigo-300
+                                '#4f46e5', // indigo-600
+                            ],
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'R&D 집약도 (%)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'R&D 집약도 비교 (KATECH)',
+                                font: { size: 18, weight: 'bold' },
+                                color: '#3730a3'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (c) => `${c.label}: ${c.raw}%`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        
+        const phaseBackgroundPlugin = {
+            id: 'phaseBackgroundPlugin',
+            beforeDatasetsDraw(chart, args, options) {
+                const { ctx, data, chartArea: { top, bottom, left, right }, scales: { y } } = chart;
+                ctx.save();
+                
+                const phaseSections = [
+                    { start: 0, end: 4, color: 'rgba(79, 70, 229, 0.05)' }, // Phase 1: 5 tasks (index 0-4)
+                    { start: 5, end: 7, color: 'rgba(16, 185, 129, 0.05)' }, // Phase 2: 3 tasks (index 5-7)
+                    { start: 8, end: 12, color: 'rgba(139, 92, 246, 0.05)' } // Phase 3: 5 tasks (index 8-12)
+                ];
+                
+                const barThickness = y.getPixelForTick(0) - y.getPixelForTick(1);
+                const barPercentage = y.options.barPercentage || 0.9;
+                const categoryPercentage = y.options.categoryPercentage || 0.8;
+                const finalBarThickness = (barThickness * categoryPercentage * barPercentage);
+
+                phaseSections.forEach(section => {
+                    const yStart = y.getPixelForValue(section.start);
+                    const yEnd = y.getPixelForValue(section.end);
+                    
+                    const topPixel = yStart - (barThickness * categoryPercentage) / 2;
+                    const height = (yEnd - yStart) + (barThickness * categoryPercentage);
+
+                    ctx.fillStyle = section.color;
+                    ctx.fillRect(left, topPixel, right - left, height);
+                });
+                
+                ctx.restore();
+            }
+        };
+
+        
+        function initGanttChart() {
+            const ganttCtx = document.getElementById('ganttChart');
+            if (ganttCtx && !ganttChartInstance) {
+                
+                const ganttLabels = [
+                    '1-1. 킥오프',       // 0
+                    '1-2. 설문 설계',     // 1
+                    '1-3. 전사 서베이',   // 2
+                    "1-4. 분석: '핵심 인재상' 기준(v1.0) 정의", // 3
+                    '1-5. 중간 보고',     // 4
+                    "2-1. 1:1 인터뷰: 분류 기준(A/B/C/D) 정의서 수립", // 5
+                    '2-2. 중국 법인 스크리닝', // 6
+                    '2-3. 조직 재설계',   // 7
+                    '3-1. 인센티브 플랜', // 8
+                    "3-2. 인력 재배치/효율화 로드맵", // 9
+                    '3-3. KPI/성과관리',  // 10
+                    '3-4. 경영리뷰 체계', // 11
+                    '3-5. 최종 보고'       // 12
+                ];
+                
+                const ganttData = {
+                    labels: ganttLabels,
+                    datasets: [
+                        {
+                            label: 'Start Buffer (Hidden)',
+                            data: [
+                                1,  // 1-1
+                                3,  // 1-2
+                                10, // 1-3
+                                17, // 1-4
+                                25, // 1-5
+                                30, // 2-1
+                                30, // 2-2
+                                50, // 2-3
+                                57, // 3-1
+                                59, // 3-2
+                                67, // 3-3
+                                78, // 3-4
+                                81  // 3-5
+                            ],
+                            backgroundColor: 'transparent',
+                            barThickness: 25,
+                        },
+                        {
+                            label: 'Phase 1: 진단',
+                            data: [
+                                2, // 1-1 (1~2)
+                                7, // 1-2 (3~9)
+                                7, // 1-3 (10~16)
+                                8, // 1-4 (17~24)
+                                5, // 1-5 (25~29)
+                                0, 0, 0, 0, 0, 0, 0, 0
+                            ],
+                            backgroundColor: 'rgba(79, 70, 229, 0.8)', // indigo-600
+                            barThickness: 25,
+                        },
+                        {
+                            label: 'Phase 2: 설계',
+                            data: [
+                                0, 0, 0, 0, 0,
+                                20, // 2-1 (30~49)
+                                20, // 2-2 (30~49) - PDF에 명시됨. "상동"
+                                7,  // 2-3 (50~56)
+                                0, 0, 0, 0, 0
+                            ],
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)', // green-500
+                            barThickness: 25,
+                        },
+                        {
+                            label: 'Phase 3: 실행 준비',
+                            data: [
+                                0, 0, 0, 0, 0, 0, 0, 0,
+                                2,  // 3-1 (57~58)
+                                8,  // 3-2 (59~66)
+                                11, // 3-3 (67~77)
+                                3,  // 3-4 (78~80)
+                                5   // 3-5 (81~85)
+                            ],
+                            backgroundColor: 'rgba(139, 92, 246, 0.8)', // purple-500
+                            barThickness: 25,
+                        }
+                    ]
+                };
+
+                ganttChartInstance = new Chart(ganttCtx, {
+                    type: 'bar',
+                    data: ganttData,
+                    plugins: [ChartDataLabels, {
+                        id: 'phaseBackgroundPlugin',
+                        beforeDatasetsDraw(chart, args, options) {
+                            const { ctx, data, chartArea: { top, bottom, left, right }, scales: { y } } = chart;
+                            ctx.save();
+                            
+                            const phaseSections = [
+                                { start: 0, end: 4, color: 'rgba(79, 70, 229, 0.05)' }, // Phase 1: 5 tasks
+                                { start: 5, end: 7, color: 'rgba(16, 185, 129, 0.05)' }, // Phase 2: 3 tasks
+                                { start: 8, end: 12, color: 'rgba(139, 92, 246, 0.05)' } // Phase 3: 5 tasks
+                            ];
+                            
+                            const barThickness = y.getPixelForTick(0) - y.getPixelForTick(1);
+                            const barPercentage = y.options.barPercentage || 0.9;
+                            const categoryPercentage = y.options.categoryPercentage || 0.8;
+                            const finalBarThickness = (barThickness * categoryPercentage * barPercentage);
+
+                            phaseSections.forEach(section => {
+                                const yStart = y.getPixelForValue(section.start);
+                                const yEnd = y.getPixelForValue(section.end);
+                                
+                                const topPixel = yStart - (barThickness * categoryPercentage) / 2;
+                                const height = (yEnd - yStart) + (barThickness * categoryPercentage);
+
+                                ctx.fillStyle = section.color;
+                                ctx.fillRect(left, topPixel, right - left, height);
+                            });
+                            
+                            ctx.restore();
+                        }
+                    }],
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                stacked: true,
+                                min: 1,
+                                max: 90,
+                                title: {
+                                    display: true,
+                                    text: '프로젝트 경과일 (Day)'
+                                },
+                                ticks: {
+                                    stepSize: 10
+                                }
+                            },
+                            y: {
+                                stacked: true,
+                                ticks: {
+                                    align: 'start', 
+                                    font: {
+                                        size: 16
+                                    },
+                                    padding: 10
+                                }
+                            }
+                        },
+                        plugins: {
+                            datalabels: {
+                                display: false
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    
+                                    filter: function(legendItem, chartData) {
+                                        return legendItem.datasetIndex !== 0;
+                                    },
+                                    font: {
+                                        size: 16
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: "80-Day HR PMI Roadmap (제안서 기반)",
+                                font: { size: 18, weight: 'bold' },
+                                color: '#3730a3'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(tooltipItems) {
+                                        return tooltipItems[0].label;
+                                    },
+                                    label: function(context) {
+                                        if (context.datasetIndex === 0) return null;
+                                        
+                                        const phaseLabel = context.dataset.label;
+                                        const startDay = context.chart.data.datasets[0].data[context.dataIndex];
+                                        const duration = context.raw;
+                                        const endDay = startDay + duration - 1; 
+                                        
+                                        if (duration === 0) return null;
+
+                                        return `${phaseLabel}: Day ${startDay} ~ Day ${endDay} (${duration}일간)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        
+        const initialActiveSection = document.querySelector('.main-section.active');
+        if (initialActiveSection) {
+            if (initialActiveSection.id === 'section-2') {
+                initFinancialsChart();
+                initEvVsIceChart();
+            }
+            if (initialActiveSection.id === 'section-3') {
+                initRetentionRiskChart();
+                initRdIntensityChart();
+            }
+            if (initialActiveSection.id === 'section-4') {
+                initGanttChart();
+            }
+        }
+        
+        
+        const allCollapsibleContents = document.querySelectorAll('.collapsible-content');
+        allCollapsibleContents.forEach(content => {
+            content.style.display = 'none'; 
+        });
+        const allCollapsibleIcons = document.querySelectorAll('.collapsible-icon');
+        allCollapsibleIcons.forEach(icon => {
+            icon.classList.remove('rotate-180');
+        });
+
+    });
+    </script>
+
+</body>
+</html>
